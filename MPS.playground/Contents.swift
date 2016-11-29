@@ -12,15 +12,15 @@ class Renderer: NSObject, MTKViewDelegate {
     override init() {
         super.init()
         device = MTLCreateSystemDefaultDevice()
-        queue = device.newCommandQueue()
+        queue = device.makeCommandQueue()
         let textureLoader = MTKTextureLoader(device: device)
-        let url = Bundle.main.urlForResource("nature", withExtension: "jpg")!
+      let url = Bundle.main.url(forResource: "nature", withExtension: "jpg")!
         do { texIn = try textureLoader.newTexture(withContentsOf: url, options: [:]) }
         catch _ { fatalError("Resource file cannot be loaded!") }
     }
     
     func draw(in view: MTKView) {
-        let commandBuffer = queue.commandBuffer()
+        let commandBuffer = queue.makeCommandBuffer()
         let texOut = view.currentDrawable!.texture
         let shader = MPSImageGaussianBlur(device: device, sigma: 5)
         //let shader = MPSImageSobel(device: device)
