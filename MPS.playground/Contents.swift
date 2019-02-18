@@ -21,7 +21,7 @@ class Renderer: NSObject, MTKViewDelegate {
     
     func draw(in view: MTKView) {
         guard let commandBuffer = queue.makeCommandBuffer(),
-              let texOut = view.currentDrawable.texture else {
+              let drawable = view.currentDrawable else {
             return
         }
         let shader = MPSImageGaussianBlur(device: device, sigma: 5)
@@ -31,8 +31,9 @@ class Renderer: NSObject, MTKViewDelegate {
         //let shader = MPSImageMedian(device: device, kernelDiameter: 3)
         //let shader = MPSImageBox(device: device, kernelWidth: 9, kernelHeight: 9)
         //let shader = MPSImageTent(device: device, kernelWidth: 9, kernelHeight: 9)
+        let texOut = drawable.texture
         shader.encode(commandBuffer: commandBuffer, sourceTexture: texIn, destinationTexture: texOut)
-        commandBuffer.present(view.currentDrawable!)
+        commandBuffer.present(drawable)
         commandBuffer.commit()
     }
     
